@@ -4,7 +4,7 @@ import org.junit.Test;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.script.ScriptEngine;
-
+import javax.el.ELProcessor;
 
 public class Target {
 
@@ -23,12 +23,7 @@ public class Target {
 
     @Test
     public void testRevershell() throws Exception {
-//        String script = "import org.buildobjects.process.ProcBuilder\n" +
-//                "@Grab('org.buildobjects:jproc:2.2.3')\n" +
-//                "class Dummy{ }\n" +
-//                "print new ProcBuilder(\"gedit\").run().getOutputString()\n";
-//        GroovyShell groovyShell = new GroovyShell();
-//        groovyShell.parse(script);
+//        InitialContext ctx = new InitialContext();
     }
 
 }

